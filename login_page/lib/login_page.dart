@@ -15,25 +15,24 @@ class _LoginPageState extends State<LoginPage> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Column(
         children: [
           Container(
               width: w,
               height: h * 0.25,
               decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
                 image: DecorationImage(
                   image: AssetImage('img/loginimg.png'),
                   fit: BoxFit.cover,
                 ),
               )),
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
+            decoration: BoxDecoration(),
             margin: const EdgeInsets.only(left: 20, top: 20),
             width: w,
             child:
@@ -150,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )),
           SizedBox(
-            height: 30,
+            height: 15,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
           Row(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 20, right: 0, top: 20),
+                margin: EdgeInsets.only(left: 20, right: 0, top: 2),
                 width: w * 0.5,
                 height: h * 0.08,
                 decoration: BoxDecoration(
@@ -178,8 +177,8 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 margin: EdgeInsets.only(
                   left: 0,
-                  top: 20,
-                  right: 30,
+                  top: 2,
+                  right: 20,
                 ),
                 width: w * 0.2,
                 height: h * 0.05,
@@ -193,6 +192,23 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: RichText(
+              text: TextSpan(
+                  text: "Don't have an account?",
+                  style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+                  children: [
+                    TextSpan(
+                      text: "Create",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ]),
+            ),
+          )
         ],
       ),
     );
