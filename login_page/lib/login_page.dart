@@ -47,7 +47,45 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 7,
+                      spreadRadius: 1,
+                      offset: const Offset(1, 1),
+                    )
+                  ],
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    hintText: "Email",
+                    hintStyle: TextStyle(color: Colors.grey[500]),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Colors.grey[500],
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
                       blurRadius: 7,
                       spreadRadius: 1,
                       offset: const Offset(1, 1),
@@ -77,6 +115,18 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )
             ]),
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          Row(
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "Forgot your Password?",
+                style: TextStyle(fontSize: 20, color: Colors.grey[500]),
+              ),
+            ],
           )
         ],
       ),
