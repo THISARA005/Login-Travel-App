@@ -235,7 +235,6 @@ class SignupPage extends StatelessWidget {
               ),
             ],
           ),*/
-
           Wrap(
             children: List<Widget>.generate(
               3,
@@ -259,7 +258,7 @@ class SignupPage extends StatelessWidget {
             padding: EdgeInsets.only(top: 10),
             child: RichText(
               text: TextSpan(
-                  text: "Already have an account?",
+                  text: "Already have an account?  ",
                   style: TextStyle(fontSize: 15, color: Colors.grey[500]),
                   children: [
                     TextSpan(
