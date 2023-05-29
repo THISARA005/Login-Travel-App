@@ -1,59 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({Key? key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     List images = ["googleicon.png", "twittericon.png", "fbicon.png"];
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Column(
         children: [
           Container(
-              width: w,
-              height: h * 0.25,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                image: DecorationImage(
-                  image: AssetImage('img/loginimg.png'),
-                  fit: BoxFit.cover,
-                ),
-              )),
+            width: w,
+            height: h * 0.25,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              image: DecorationImage(
+                image: AssetImage('img/createaccount.png'),
+                fit: BoxFit.contain, // or BoxFit.scaleDown
+              ),
+            ),
+          ),
           Container(
-            width: w *
-                0.9, // Update the width value according to your desired size
-            height: 50,
-            decoration: BoxDecoration(),
+            decoration: const BoxDecoration(),
             margin: const EdgeInsets.only(left: 20, top: 20),
-
+            width: w,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                "Let's Start your journey with us",
+                "GoGlobe Travel Guide",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Sign in to your account",
-                style: TextStyle(fontSize: 20, color: Colors.grey[500]),
               ),
               SizedBox(
                 height: 30,
               ),
               Container(
+                width: w *
+                    0.9, // Update the width value according to your desired size
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 7,
+                      spreadRadius: 1,
+                      offset: const Offset(1, 1),
+                    )
+                  ],
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    hintText: "UserName",
+                    hintStyle: TextStyle(color: Colors.grey[500]),
+                    prefixIcon: Icon(
+                      Icons.verified_user_rounded,
+                      color: Colors.grey[500],
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: w *
+                    0.9, // Update the width value according to your desired size
+                height: 40,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
@@ -92,6 +124,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               Container(
+                width: w *
+                    0.9, // Update the width value according to your desired size
+                height: 40,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
@@ -129,14 +164,17 @@ class _LoginPageState extends State<LoginPage> {
             ]),
           ),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           Row(
             children: [
-              Expanded(child: Container()),
+              Padding(padding: EdgeInsets.only(left: 20)),
               Text(
-                "Forgot your Password?",
-                style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+                "Add your personal details in here.",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -149,23 +187,23 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 image: DecorationImage(
-                  image: AssetImage('img/signin.png'),
+                  image: AssetImage('img/signupicon.png'),
                   fit: BoxFit.cover,
                 ),
               )),
           SizedBox(
             height: 15,
           ),
-          Row(
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Or login via",
+                "Or sign-Up using",
                 style: TextStyle(fontSize: 15, color: Colors.grey[500]),
               ),
             ],
           ),
-          /* Row(
+          Row(
             children: [
               Container(
                 margin: EdgeInsets.only(left: 20, right: 0, top: 2),
@@ -197,6 +235,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),*/
+
           Wrap(
             children: List<Widget>.generate(
               3,
@@ -220,11 +259,11 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.only(top: 10),
             child: RichText(
               text: TextSpan(
-                  text: "Don't have an account?",
+                  text: "Already have an account?",
                   style: TextStyle(fontSize: 15, color: Colors.grey[500]),
                   children: [
                     TextSpan(
-                      text: "Sign up",
+                      text: "Login here",
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.black,
