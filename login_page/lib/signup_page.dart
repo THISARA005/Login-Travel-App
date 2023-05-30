@@ -11,13 +11,13 @@ class SignupPage extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Column(
         children: [
           Container(
             width: w,
             height: h * 0.25,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -34,11 +34,11 @@ class SignupPage extends StatelessWidget {
             width: w,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text(
+              Text(
                 "GoGlobe Travel Guide",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 30,
               ),
               Container(
@@ -60,13 +60,11 @@ class SignupPage extends StatelessWidget {
                 child: TextField(
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     hintText: "UserName",
@@ -81,7 +79,7 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Container(
@@ -103,13 +101,11 @@ class SignupPage extends StatelessWidget {
                 child: TextField(
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     hintText: "Email",
@@ -124,7 +120,7 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Container(
@@ -146,13 +142,11 @@ class SignupPage extends StatelessWidget {
                 child: TextField(
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.white, width: 1.0),
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     hintText: "Password",
@@ -169,13 +163,13 @@ class SignupPage extends StatelessWidget {
               )
             ]),
           ),
-          const SizedBox(
+          SizedBox(
             height: 20,
           ),
           Row(
             children: [
-              const Padding(padding: EdgeInsets.only(left: 20)),
-              const Text(
+              Padding(padding: EdgeInsets.only(left: 20)),
+              Text(
                 "Add your personal details in here.",
                 style: TextStyle(
                     fontSize: 15,
@@ -184,25 +178,20 @@ class SignupPage extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
+          SizedBox(
             height: 30,
           ),
           Container(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/homePage');
-              },
-              child: const Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 30,
-                  color: Color.fromARGB(255, 4, 51, 18),
+              width: w * 0.5,
+              height: h * 0.08,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                image: DecorationImage(
+                  image: AssetImage('img/signupicon.png'),
+                  fit: BoxFit.cover,
                 ),
-              ),
-            ),
-          ),
-          const SizedBox(
+              )),
+          SizedBox(
             height: 15,
           ),
           /*Row(
@@ -266,13 +255,13 @@ class SignupPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: 10),
             child: RichText(
               text: TextSpan(
                   text: "Already have an account?  ",
                   style: TextStyle(fontSize: 15, color: Colors.grey[500]),
                   children: [
-                    const TextSpan(
+                    TextSpan(
                       text: "Login here",
                       style: TextStyle(
                           fontSize: 15,
