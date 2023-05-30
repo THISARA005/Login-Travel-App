@@ -182,15 +182,19 @@ class SignupPage extends StatelessWidget {
             height: 30,
           ),
           Container(
-              width: w * 0.5,
-              height: h * 0.08,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                image: DecorationImage(
-                  image: AssetImage('img/signupicon.png'),
-                  fit: BoxFit.cover,
-                ),
-              )),
+              child: TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/homePage');
+            },
+            child: Text(
+              'Sign-Up',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 30,
+                color: Color.fromARGB(152, 23, 164, 4),
+              ),
+            ),
+          )),
           SizedBox(
             height: 15,
           ),
