@@ -74,6 +74,12 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
               )),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+          ),
         ],
       ),
     );
