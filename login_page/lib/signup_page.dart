@@ -246,10 +246,10 @@ class SignupPage extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: CircleAvatar(
-                    radius: 30,
+                    radius: 20, // Adjusted radius to reduce the size
                     backgroundColor: Colors.grey[500],
                     child: CircleAvatar(
-                      radius: 25,
+                      radius: 15, // Adjusted radius to reduce the size
                       backgroundColor: Colors.white,
                       backgroundImage: AssetImage("img/${images[index]}"),
                     ),

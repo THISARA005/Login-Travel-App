@@ -4,6 +4,7 @@ import 'package:login_page/signup_page.dart';
 import 'package:login_page/welcome_page.dart';
 
 void main() {
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

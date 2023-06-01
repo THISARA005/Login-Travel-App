@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606699022553",
+    "project_id": "goglobe-signin",
+    "storage_bucket": "goglobe-signin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606699022553:android:a777968554eec1592bf6c8",
+        "android_client_info": {
+          "package_name": "com.thisara.example.travelapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCL_By1mO1GfR-qYBpouEgPPZ5r9LhFjsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
