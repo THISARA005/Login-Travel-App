@@ -3,6 +3,23 @@ import 'package:flutter/material.dart';
 class SignupPage extends StatelessWidget {
   const SignupPage({Key? key});
 
+  Widget imageProfile() {
+    return Center(
+      child: Stack(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 80.0,
+            backgroundImage: AssetImage('img/profilepic.png'),
+          ),
+          Positioned(
+              bottom: 20,
+              top: 20,
+              child: Icon(Icons.camera_alt, color: Colors.teal, size: 28))
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List images = ["googleicon.png", "twittericon.png", "fbicon.png"];
