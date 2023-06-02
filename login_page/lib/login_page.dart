@@ -144,15 +144,26 @@ class _LoginPageState extends State<LoginPage> {
             height: 20,
           ),
           Container(
-              width: w * 0.5,
-              height: h * 0.08,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                image: DecorationImage(
-                  image: AssetImage('img/signin.png'),
-                  fit: BoxFit.cover,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/homePage');
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              )),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                textStyle: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: Text('Sign-Up'),
+            ),
+          ),
           SizedBox(
             height: 15,
           ),
