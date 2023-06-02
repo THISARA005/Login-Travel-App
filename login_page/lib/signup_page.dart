@@ -1,20 +1,96 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({Key? key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
-  Widget imageProfile() {
-    return Center(
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final ImagePicker _picker = ImagePicker();
+  PickedFile? _imageFile;
+
+  Widget bottomSheet(BuildContext context) {
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Choose Profile Photo",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                icon: Icon(Icons.camera),
+                onPressed: () {
+                  takePhoto(ImageSource.camera);
+                },
+                label: Text("Camera"),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.image),
+                onPressed: () {
+                  takePhoto(ImageSource.gallery);
+                },
+                label: Text("Gallery"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(source: source);
+    setState(() {
+      _imageFile = pickedFile;
+    });
+  }
+
+  Widget imageProfile(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
       child: Stack(
         children: <Widget>[
           CircleAvatar(
             radius: 80.0,
-            backgroundImage: AssetImage('img/profilepic.png'),
+            backgroundImage: _imageFile == null
+                ? AssetImage('img/profilepic.png')
+                : FileImage(File(_imageFile!.path)) as ImageProvider,
           ),
           Positioned(
-              bottom: 20,
-              top: 20,
-              child: Icon(Icons.camera_alt, color: Colors.teal, size: 28))
+            bottom: 20,
+            top: 20,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return bottomSheet(
+                        context); // Pass the context to the bottomSheet function
+                  },
+                );
+              },
+              child: Icon(Icons.camera_alt, color: Colors.teal, size: 28),
+            ),
+          ),
         ],
       ),
     );
@@ -33,6 +109,8 @@ class SignupPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              imageProfile(context),
+              SizedBox(height: 20),
               Container(
                 width: w,
                 height: h * 0.25,
@@ -276,47 +354,6 @@ class SignupPage extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
-              /*Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Or sign-Up using",
-                    style: TextStyle(fontSize: 15, color: Colors.grey[500]),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20, right: 0, top: 2),
-                    width: w * 0.5,
-                    height: h * 0.08,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(70),
-                      image: DecorationImage(
-                        image: AssetImage('img/fbicon.png'),
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      left: 0,
-                      top: 2,
-                      right: 20,
-                    ),
-                    width: w * 0.2,
-                    height: h * 0.05,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      image: DecorationImage(
-                        image: AssetImage('img/googleicon.png'),
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                ],
-              ),*/
               Wrap(
                 children: List<Widget>.generate(
                   3,
