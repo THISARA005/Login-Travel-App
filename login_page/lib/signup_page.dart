@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_page/error_dialog.dart';
+import 'package:login_page/login_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -205,7 +206,7 @@ class _SignupPageState extends State<SignupPage> {
                             hintText: "UserName",
                             hintStyle: TextStyle(color: Colors.grey[500]),
                             prefixIcon: Icon(
-                              Icons.verified_user_rounded,
+                              Icons.person_2_outlined,
                               color: Colors.grey[500],
                             ),
                             border: OutlineInputBorder(
@@ -291,7 +292,7 @@ class _SignupPageState extends State<SignupPage> {
                             hintText: "Password",
                             hintStyle: TextStyle(color: Colors.grey[500]),
                             prefixIcon: Icon(
-                              Icons.password,
+                              Icons.lock,
                               color: Colors.grey[500],
                             ),
                             border: OutlineInputBorder(
@@ -387,7 +388,20 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 25,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Or login via",
+                      style: TextStyle(
+                          fontSize: 15, color: Color.fromARGB(255, 15, 14, 14)),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
                 ),
                 Wrap(
                   children: List<Widget>.generate(
@@ -409,24 +423,36 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Already have an account?  ",
-                      style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextSpan(
-                          text: "Login here",
+                        Text(
+                          "Already have an account?",
                           style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 16,
                           ),
                         ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
+                          child: Text(
+                            "Login here",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
                       ],
-                    ),
-                  ),
-                ),
+                    )),
               ],
             ),
           ),
