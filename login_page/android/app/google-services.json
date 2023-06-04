@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "606699022553",
-    "project_id": "goglobe-signin",
-    "storage_bucket": "goglobe-signin.appspot.com"
+    "project_number": "1084001800363",
+    "project_id": "goglobe-login-c0187",
+    "storage_bucket": "goglobe-login-c0187.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:606699022553:android:a777968554eec1592bf6c8",
+        "mobilesdk_app_id": "1:1084001800363:android:7cfb0c91be5ad4ad5ae7ee",
         "android_client_info": {
-          "package_name": "com.thisara.example.travelapp"
+          "package_name": "com.example.login_page"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1084001800363-m0k6actdu5e7vlgmhpk5rlp3cueie79c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCL_By1mO1GfR-qYBpouEgPPZ5r9LhFjsQ"
+          "current_key": "AIzaSyAP28L44uvLckg3SE-rKvv_26HkeRC5jgg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084001800363-m0k6actdu5e7vlgmhpk5rlp3cueie79c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
