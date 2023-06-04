@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String message;
-  ErrorDialog({required this.message});
+  ErrorDialog({required this.message, required String title});
 
   @override
   Widget build(BuildContext context) {
