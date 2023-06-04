@@ -66,18 +66,21 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget imageProfile(BuildContext context) {
     return Container(
-      alignment: Alignment.bottomCenter,
       child: Stack(
         children: <Widget>[
-          CircleAvatar(
-            radius: 80.0,
-            backgroundImage: _imageFile == null
-                ? AssetImage('img/profilepic.png')
-                : FileImage(File(_imageFile!.path)) as ImageProvider,
+          Positioned(
+            top: 115,
+            left: 15,
+            child: CircleAvatar(
+              radius: 60.0, // Change the radius to adjust the size
+              backgroundImage: _imageFile == null
+                  ? AssetImage('img/profilepic.png')
+                  : FileImage(File(_imageFile!.path)) as ImageProvider,
+            ),
           ),
           Positioned(
-            bottom: 20,
-            top: 20,
+            top: 165, // Change the top position
+            left: 85, // Change the right position
             child: InkWell(
               onTap: () {
                 showModalBottomSheet(
@@ -88,7 +91,8 @@ class _SignupPageState extends State<SignupPage> {
                   },
                 );
               },
-              child: Icon(Icons.camera_alt, color: Colors.teal, size: 28),
+              child: Icon(Icons.camera_alt,
+                  color: Colors.teal, size: 48), // Change the size of the Icon
             ),
           ),
         ],
@@ -109,7 +113,6 @@ class _SignupPageState extends State<SignupPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              imageProfile(context),
               SizedBox(height: 20),
               Container(
                 width: w,
@@ -123,6 +126,11 @@ class _SignupPageState extends State<SignupPage> {
                     image: AssetImage('img/createaccount.png'),
                     fit: BoxFit.contain, // or BoxFit.scaleDown
                   ),
+                ),
+                child: Align(
+                  alignment:
+                      Alignment.bottomLeft, // Change the alignment as needed
+                  child: imageProfile(context),
                 ),
               ),
               Container(
