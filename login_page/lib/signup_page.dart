@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_page/error_dialog.dart';
+import 'package:login_page/home_screen.dart';
 import 'package:login_page/login_page.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -257,22 +259,22 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(
                   height: 20,
                 ),
-                // Container(
-                //   width: w * 0.9,
-                //   height: 45,
-                //   child: Padding(
-                //     padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
-                //     child: IntlPhoneField(
-                //       decoration: InputDecoration(
-                //         labelText: 'Phone Number',
-                //       ),
-                //       initialCountryCode: 'SL',
-                //       onChanged: (phone) {
-                //         print(phone.completeNumber);
-                //       },
-                //     ),
-                //   ),
-                // ),
+                Container(
+                  width: w * 0.9,
+                  height: 45,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
+                    child: IntlPhoneField(
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
+                      initialCountryCode: 'SL',
+                      onChanged: (phone) {
+                        print(phone.completeNumber);
+                      },
+                    ),
+                  ),
+                ),
                 // SizedBox(
                 //   height: 20,
                 // ),
@@ -301,7 +303,22 @@ class _SignupPageState extends State<SignupPage> {
                 //     child: Text('Sign-Up'),
                 //   ),
                 // ),
-                SignInSignUpButton(context, false, () {}),
+                SignInSignUpButton(context, false, () {
+                  FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text)
+                      .then((value) {
+                    print("account created");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  }).onError((error, stackTrace) {
+                    print("error ${error.toString()}");
+                  });
+                }),
                 SizedBox(
                   height: 25,
                 ),
