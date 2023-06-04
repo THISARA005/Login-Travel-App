@@ -6,6 +6,8 @@ import 'package:login_page/error_dialog.dart';
 import 'package:login_page/login_page.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:login_page/reusable_widget.dart';
+import 'package:login_page/welcome_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -19,6 +21,10 @@ class _SignupPageState extends State<SignupPage> {
   PickedFile? _imageFile;
   String? selectedAgeRange;
   GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController _userNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
 
   // Track the selected country
 
@@ -188,175 +194,23 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 30,
                       ),
-                      Container(
-                        width: w *
-                            0.9, // Update the width value according to your desired size
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                              offset: const Offset(1, 1),
-                            )
-                          ],
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            hintText: "UserName",
-                            hintStyle: TextStyle(color: Colors.grey[500]),
-                            prefixIcon: Icon(
-                              Icons.person_2_outlined,
-                              color: Colors.grey[500],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
+                      reusableTextField("Enter UserName", Icons.person_outlined,
+                          false, _userNameController),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: w *
-                            0.9, // Update the width value according to your desired size
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                              offset: const Offset(1, 1),
-                            )
-                          ],
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            hintText: "Email",
-                            hintStyle: TextStyle(color: Colors.grey[500]),
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color: Colors.grey[500],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
+                      reusableTextField(
+                          "Enter email", Icons.email, false, _emailController),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: w *
-                            0.9, // Update the width value according to your desired size
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                              offset: const Offset(1, 1),
-                            )
-                          ],
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            hintText: "Password",
-                            hintStyle: TextStyle(color: Colors.grey[500]),
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.grey[500],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
+                      reusableTextField("Enter Password",
+                          Icons.password_outlined, true, _passwordController),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: w *
-                            0.9, // Update the width value according to your desired size
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                              offset: const Offset(1, 1),
-                            )
-                          ],
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            hintText: "Confirm Password",
-                            hintStyle: TextStyle(color: Colors.grey[500]),
-                            prefixIcon: Icon(
-                              Icons.password,
-                              color: Colors.grey[500],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
-                      ),
+                      reusableTextField("Confirm your password",
+                          Icons.password_outlined, true, _passwordController),
                       SizedBox(
                         height: 20,
                       ),
@@ -364,16 +218,8 @@ class _SignupPageState extends State<SignupPage> {
                         width: w * 0.9,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                              offset: const Offset(1, 1),
-                            )
-                          ],
+                          borderRadius: BorderRadius.circular(20),
+                          color: Color.fromARGB(4, 67, 80, 80),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -411,62 +257,51 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  width: w * 0.9,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 7,
-                        spreadRadius: 1,
-                        offset: const Offset(1, 1),
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
-                    child: IntlPhoneField(
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                      ),
-                      initialCountryCode: 'SL',
-                      onChanged: (phone) {
-                        print(phone.completeNumber);
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      formValidation();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                      textStyle: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: Text('Sign-Up'),
-                  ),
-                ),
+                // Container(
+                //   width: w * 0.9,
+                //   height: 45,
+                //   child: Padding(
+                //     padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
+                //     child: IntlPhoneField(
+                //       decoration: InputDecoration(
+                //         labelText: 'Phone Number',
+                //       ),
+                //       initialCountryCode: 'SL',
+                //       onChanged: (phone) {
+                //         print(phone.completeNumber);
+                //       },
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // SizedBox(
+                //   height: 30,
+                // ),
+                // Container(
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       formValidation();
+                //     },
+                //     style: ElevatedButton.styleFrom(
+                //       primary: Colors.green,
+                //       onPrimary: Colors.white,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(30),
+                //       ),
+                //       padding:
+                //           EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                //       textStyle: TextStyle(
+                //         fontFamily: 'Roboto',
+                //         fontSize: 20,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //     child: Text('Sign-Up'),
+                //   ),
+                // ),
+                SignInSignUpButton(context, false, () {}),
                 SizedBox(
                   height: 25,
                 ),
