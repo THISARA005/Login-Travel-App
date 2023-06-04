@@ -427,9 +427,11 @@ class _SignupPageState extends State<SignupPage> {
                     ],
                   ),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(5, 30, 15, 0),
+                    padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
                     child: IntlPhoneField(
-                      decoration: InputDecoration(),
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
                       initialCountryCode: 'SL',
                       onChanged: (phone) {
                         print(phone.completeNumber);
