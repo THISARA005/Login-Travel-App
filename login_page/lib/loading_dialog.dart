@@ -18,7 +18,7 @@ class LoadingDialog extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Text(message + ", Authenticating, please wait..."),
+          Text(message + " please wait..."),
         ],
       ),
     );

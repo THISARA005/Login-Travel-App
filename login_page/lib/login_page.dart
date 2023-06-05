@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   formValidation() {
     if (_emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
+      loginNow();
     } else {
       showDialog(
           context: context,
@@ -60,7 +61,15 @@ class _LoginPageState extends State<LoginPage> {
             return ErrorDialog(message: e.message.toString(), title: "Error");
           });
     });
-    if (currentUser != null) {}
+    if (currentUser != null) {
+      readDataAndSetDataLocally(currentUser!).then((value) {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const WelcomePage()),
+        );
+      });
+    }
   }
 
   Future readDataAndSetDataLocally(User currentUser) async {
@@ -162,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Text('Sign-Up'),
+                        child: Text('Sign-In'),
                       ),
                     ),
                     SizedBox(
