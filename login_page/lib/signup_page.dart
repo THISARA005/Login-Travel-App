@@ -207,17 +207,20 @@ class _SignupPageState extends State<SignupPage> {
             email: _emailController.text.trim(),
             password: _passwordController.text.trim())
         .then((auth) {
-      saveDataToFireStore(auth.user!);
-      Navigator.pushReplacement(
+      currentUser = auth.user;
+      saveDataToFireStore(currentUser!); // Save user data to Firestore
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const WelcomePage()),
+        MaterialPageRoute(
+            builder: (context) => WelcomePage()), // Navigate to WelcomePage
       );
-    }).onError((error, stackTrace) {
+    }).catchError((Error) {
+      Navigator.pop(context);
       showDialog(
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: error.toString(),
+              message: Error.toString(),
               title: 'Error message',
             );
           });
@@ -237,8 +240,8 @@ class _SignupPageState extends State<SignupPage> {
       "imageUrl": travelerImageUrl,
       "joinedAt": DateTime.now(),
     });
-    SharedPreferences? preferences;
-    await preferences!.setString("uid", currentUser.uid);
+    SharedPreferences? preferences = await SharedPreferences.getInstance();
+    await preferences.setString("uid", currentUser.uid);
     await preferences.setString("name", _userNameController.text.trim());
     await preferences.setString("email", currentUser.email.toString());
     await preferences.setString("phone", _phoneNumberController.text.trim());
