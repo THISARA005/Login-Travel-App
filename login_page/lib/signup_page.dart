@@ -11,6 +11,8 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:login_page/reusable_widget.dart';
 import 'package:login_page/welcome_page.dart';
 
+import 'loading_dialog.dart';
+
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -152,6 +154,11 @@ class _SignupPageState extends State<SignupPage> {
             _emailController.text.isNotEmpty &&
             _userNameController.text.isNotEmpty &&
             _phoneNumberController.text.isNotEmpty) {
+          showDialog(
+              context: context,
+              builder: (c) {
+                return LoadingDialog(message: "Creating account");
+              });
         } else {
           showDialog(
               context: context,
