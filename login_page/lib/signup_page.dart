@@ -212,7 +212,7 @@ class _SignupPageState extends State<SignupPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => WelcomePage()), // Navigate to WelcomePage
+            builder: (context) => LoginPage()), // Navigate to WelcomePage
       );
     }).catchError((Error) {
       Navigator.pop(context);
