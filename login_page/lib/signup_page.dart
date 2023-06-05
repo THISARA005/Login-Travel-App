@@ -92,8 +92,8 @@ class _SignupPageState extends State<SignupPage> {
       child: Stack(
         children: <Widget>[
           Positioned(
-            top: 115,
-            left: 15,
+            top: 80,
+            left: 125,
             child: CircleAvatar(
               radius: 60.0, // Change the radius to adjust the size
               backgroundImage: _imageFile == null
@@ -103,7 +103,7 @@ class _SignupPageState extends State<SignupPage> {
           ),
           Positioned(
             top: 165, // Change the top position
-            left: 85, // Change the right position
+            left: 180, // Change the right position
             child: InkWell(
               onTap: () {
                 showModalBottomSheet(
@@ -115,7 +115,7 @@ class _SignupPageState extends State<SignupPage> {
                 );
               },
               child: Icon(Icons.camera_alt,
-                  color: Colors.teal, size: 48), // Change the size of the Icon
+                  color: Colors.teal, size: 38), // Change the size of the Icon
             ),
           ),
         ],
@@ -287,8 +287,8 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   child: Align(
-                    alignment:
-                        Alignment.bottomLeft, // Change the alignment as needed
+                    alignment: Alignment
+                        .bottomCenter, // Change the alignment as needed
                     child: imageProfile(context),
                   ),
                 ),
@@ -440,7 +440,7 @@ class _SignupPageState extends State<SignupPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Or login via",
+                      "Or sign up via",
                       style: TextStyle(
                           fontSize: 15, color: Color.fromARGB(255, 15, 14, 14)),
                     ),
@@ -474,7 +474,7 @@ class _SignupPageState extends State<SignupPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
+                          "Already have an account? ",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

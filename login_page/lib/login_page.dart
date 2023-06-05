@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   formValidation() {
     if (_emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      loginNow();
     } else {
       showDialog(
           context: context,
@@ -40,30 +41,34 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   loginNow() async {
-    showDialog(
-        context: context,
-        builder: (c) {
-          return LoadingDialog(message: "Checking credentials");
-        });
+    // showDialog(
+    //   context: context,
+    //   builder: (c) {
+    //     return LoadingDialog(message: "Checking credentials");
+    //   },
+    // );
 
     User? currentUser;
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim())
-        .then((auth) {
-      currentUser = auth.user!;
-    }).catchError((e) {
+    try {
+      final authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      currentUser = authResult.user;
+    } catch (e) {
       Navigator.pop(context);
       showDialog(
-          context: context,
-          builder: (c) {
-            return ErrorDialog(message: e.message.toString(), title: "Error");
-          });
-    });
+        context: context,
+        builder: (c) {
+          return ErrorDialog(message: e.toString(), title: "Error");
+        },
+      );
+    }
+
     if (currentUser != null) {
-      readDataAndSetDataLocally(currentUser!).then((value) {
-        Navigator.pop(context);
+      await readDataAndSetDataLocally(currentUser!);
+      Timer(const Duration(seconds: 1), () {
+        Navigator.pop(context); // Dismiss the loading dialog
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const WelcomePage()),
@@ -119,6 +124,18 @@ class _LoginPageState extends State<LoginPage> {
                         image: DecorationImage(
                           image: AssetImage('img/loginimg.png'),
                           fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10), // Adjust the padding values as needed
+                      child: Text(
+                        "GoGlobe Travel Planning",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
