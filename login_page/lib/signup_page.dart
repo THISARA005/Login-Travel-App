@@ -10,7 +10,7 @@ import 'package:csc_picker/csc_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:login_page/reusable_widget.dart';
 import 'package:login_page/welcome_page.dart';
-
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'loading_dialog.dart';
 
 class SignupPage extends StatefulWidget {
@@ -32,6 +32,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
 
+  String travelerImageUrl = "";
   // Track the selected country
 
   Widget bottomSheet(BuildContext context) {
@@ -159,6 +160,20 @@ class _SignupPageState extends State<SignupPage> {
               builder: (c) {
                 return LoadingDialog(message: "Creating account");
               });
+
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+          fStorage.Reference reference = fStorage.FirebaseStorage.instance
+              .ref()
+              .child("travelers")
+              .child(fileName);
+          fStorage.UploadTask uploadTask =
+              reference.putFile(File(_imageFile!.path));
+          fStorage.TaskSnapshot taskSnapshot =
+              await uploadTask.whenComplete(() {});
+          await taskSnapshot.ref.getDownloadURL().then((url) {
+            travelerImageUrl = url;
+          });
         } else {
           showDialog(
               context: context,
