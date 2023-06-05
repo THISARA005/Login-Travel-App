@@ -30,40 +30,42 @@ class _LoginPageState extends State<LoginPage> {
   formValidation() {
     if (_emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
+      loginNow();
     } else {
       showDialog(
           context: context,
           builder: (c) {
             return ErrorDialog(
-                message: "pleas fill all the fields.", title: "Error");
+                message: "please fill all the fields.", title: "Error");
           });
     }
   }
 
   loginNow() async {
-    // showDialog(
-    //   context: context,
-    //   builder: (c) {
-    //     return LoadingDialog(message: "Checking credentials");
-    //   },
-    // );
+    showDialog(
+      context: context,
+      builder: (c) {
+        return LoadingDialog(message: "Checking credentials");
+      },
+    );
 
     User? currentUser;
-    try {
-      final authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      currentUser = authResult.user;
-    } catch (e) {
-      Navigator.pop(context);
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim())
+        .then((auth) {
+      currentUser = auth.user!;
+    }).catchError((e) {
+      Navigator.pop(context); // Dismiss the loading dialog
       showDialog(
-        context: context,
-        builder: (c) {
-          return ErrorDialog(message: e.toString(), title: "Error");
-        },
-      );
-    }
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+                message: "Error: " + e.toString() + ".",
+                title: "Error"); // Show the error dialog
+          });
+    });
 
     if (currentUser != null) {
       await readDataAndSetDataLocally(currentUser!);
@@ -172,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           formValidation();
-                          loginNow();
+                          //loginNow();
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
