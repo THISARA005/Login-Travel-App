@@ -118,29 +118,23 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Future<void> formValidation() async {
-    if (_imageFile == null) {
-      showDialog(
-          context: context,
-          builder: (c) {
-            return ErrorDialog(
-              message: "Please select a profile picture",
-              title: 'Error message',
-            );
-          });
-    } else {
-      Navigator.pushNamed(context, '/homePage');
-    }
-  }
+  // Future<void> formValidation() async {
+  //   if (_imageFile == null) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (c) {
+  //           return ErrorDialog(
+  //             message: "Please select a profile picture",
+  //             title: 'Error message',
+  //           );
+  //         });
+  //   } else {
+  //     Navigator.pushNamed(context, '/homePage');
+  //   }
+  // }
 
   Future<void> formValidation1() async {
     final form = _formKey.currentState;
-    if (form == null) return;
-
-    if (!form.validate()) {
-      // Invalid form
-      return;
-    }
 
     if (_imageFile == null) {
       showDialog(
@@ -256,16 +250,13 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      reusableTextField("Enter Password",
-                          Icons.password_outlined, true, _passwordController),
+                      reusableTextField("Enter Password", Icons.lock, true,
+                          _passwordController),
                       SizedBox(
                         height: 20,
                       ),
-                      reusableTextField(
-                          "Confirm your password",
-                          Icons.password_outlined,
-                          true,
-                          _confirmPasswordController),
+                      reusableTextField("Confirm your password", Icons.lock,
+                          true, _confirmPasswordController),
                       SizedBox(
                         height: 20,
                       ),
@@ -320,9 +311,6 @@ class _SignupPageState extends State<SignupPage> {
                     padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
                     child: IntlPhoneField(
                       controller: _phoneNumberController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                      ),
                       initialCountryCode: 'SL',
                       onChanged: (phone) {
                         print(phone.completeNumber);
@@ -333,11 +321,10 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(
                   height: 25,
                 ),
-
                 Container(
                   child: ElevatedButton(
                     onPressed: () {
-                      formValidation();
+                      formValidation1();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
