@@ -12,6 +12,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:login_page/reusable_widget.dart';
 import 'package:login_page/welcome_page.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loading_dialog.dart';
 
 class SignupPage extends StatefulWidget {
@@ -236,6 +237,13 @@ class _SignupPageState extends State<SignupPage> {
       "imageUrl": travelerImageUrl,
       "joinedAt": DateTime.now(),
     });
+    SharedPreferences? preferences;
+    await preferences!.setString("uid", currentUser.uid);
+    await preferences.setString("name", _userNameController.text.trim());
+    await preferences.setString("email", currentUser.email.toString());
+    await preferences.setString("phone", _phoneNumberController.text.trim());
+    await preferences.setString("age", selectedAgeRange.toString());
+    await preferences.setString("imageUrl", travelerImageUrl);
   }
 
   @override
