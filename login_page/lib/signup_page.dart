@@ -28,6 +28,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
 
   // Track the selected country
 
@@ -152,7 +153,31 @@ class _SignupPageState extends State<SignupPage> {
         },
       );
     } else {
-      Navigator.pushNamed(context, '/homePage');
+      if (_passwordController.text == _confirmPasswordController.text) {
+        if (_confirmPasswordController.text.isNotEmpty &&
+            _emailController.text.isNotEmpty &&
+            _userNameController.text.isNotEmpty &&
+            _phoneNumberController.text.isNotEmpty) {
+        } else {
+          showDialog(
+              context: context,
+              builder: (c) {
+                return ErrorDialog(
+                  message: "Please fill all the fields for the sign up",
+                  title: 'Error message',
+                );
+              });
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (c) {
+              return ErrorDialog(
+                message: "Passwords do not match",
+                title: 'Error message',
+              );
+            });
+      }
     }
   }
 
@@ -236,8 +261,11 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      reusableTextField("Confirm your password",
-                          Icons.password_outlined, true, _passwordController),
+                      reusableTextField(
+                          "Confirm your password",
+                          Icons.password_outlined,
+                          true,
+                          _confirmPasswordController),
                       SizedBox(
                         height: 20,
                       ),
@@ -254,7 +282,8 @@ class _SignupPageState extends State<SignupPage> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Age',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              hintStyle: TextStyle(
+                                  color: Color.fromARGB(255, 214, 212, 212)),
                             ),
                             value: selectedAgeRange,
                             items: <String>[
@@ -290,6 +319,7 @@ class _SignupPageState extends State<SignupPage> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(5, 10, 15, 0),
                     child: IntlPhoneField(
+                      controller: _phoneNumberController,
                       decoration: const InputDecoration(
                         labelText: 'Phone Number',
                       ),
@@ -300,50 +330,48 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // SizedBox(
-                //   height: 30,
-                // ),
-                // Container(
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       formValidation();
-                //     },
-                //     style: ElevatedButton.styleFrom(
-                //       primary: Colors.green,
-                //       onPrimary: Colors.white,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(30),
-                //       ),
-                //       padding:
-                //           EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                //       textStyle: TextStyle(
-                //         fontFamily: 'Roboto',
-                //         fontSize: 20,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //     child: Text('Sign-Up'),
-                //   ),
-                // ),
-                SignInSignUpButton(context, false, () {
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _emailController.text,
-                          password: _passwordController.text)
-                      .then((value) {
-                    print("account created");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                    );
-                  }).onError((error, stackTrace) {
-                    print("error ${error.toString()}");
-                  });
-                }),
+                SizedBox(
+                  height: 25,
+                ),
+
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      formValidation();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      onPrimary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      textStyle: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: Text('Sign-Up'),
+                  ),
+                ),
+                // SignInSignUpButton(context, false, () {
+                //   FirebaseAuth.instance
+                //       .createUserWithEmailAndPassword(
+                //           email: _emailController.text,
+                //           password: _passwordController.text)
+                //       .then((value) {
+                //     print("account created");
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => const LoginPage()),
+                //     );
+                //   }).onError((error, stackTrace) {
+                //     print("error ${error.toString()}");
+                //   });
+                // }),
                 SizedBox(
                   height: 25,
                 ),

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:login_page/error_dialog.dart';
 import 'package:login_page/home_screen.dart';
 import 'package:login_page/reusable_widget.dart';
 import 'package:login_page/signup_page.dart';
@@ -18,6 +20,67 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   List images = ["googleicon.png", "twittericon.png", "fbicon.png"];
   String selectedCountry = ''; // Track the selected country
+
+  formValidation() {
+    if (_emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+    } else {
+      showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+                message: "pleas fill all the fields.", title: "Error");
+          });
+    }
+  }
+
+  loginNow() async {
+    showDialog(
+        context: context,
+        builder: (c) {
+          return AlertDialog(
+            title: Text("Please wait"),
+            content: Text("We are logging you in"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Ok"))
+            ],
+          );
+        });
+
+    User? currentUser;
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim())
+        .then((auth) {
+      currentUser = auth.user!;
+    }).catchError((e) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(message: e.message.toString(), title: "Error");
+          });
+    });
+    if (currentUser != null) {}
+  }
+
+  Future readDataAndSetDataLocally(User currentUser) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUser.uid)
+        .get()
+        .then((snapShot) async {
+      // await sharedPreferences!.setString("uid", currentUser.uid);
+      // await sharedPreferences!.setString("uName", _userNameController.text);
+      // await sharedPreferences!.setString("email", _emailController);
+      // await sharedPreferences!.setString("photoURL", currentUser.uid);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
