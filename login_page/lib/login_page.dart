@@ -42,30 +42,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   loginNow() async {
-    showDialog(
-      context: context,
-      builder: (c) {
-        return LoadingDialog(message: "Checking credentials");
-      },
+    print("object");
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
 
     User? currentUser;
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim())
-        .then((auth) {
-      currentUser = auth.user!;
-    }).catchError((e) {
-      Navigator.pop(context); // Dismiss the loading dialog
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim())
+          .then((auth) {
+        currentUser = auth.user!;
+      });
+    } catch (error) {
+      Navigator.pop(context);
       showDialog(
           context: context,
           builder: (c) {
             return ErrorDialog(
-                message: "Error: " + e.toString() + ".",
-                title: "Error"); // Show the error dialog
+              message: error.toString(),
+              title: 'Error',
+            );
           });
-    });
+    }
 
     if (currentUser != null) {
       await readDataAndSetDataLocally(currentUser!);
@@ -174,7 +176,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           formValidation();
-                          //loginNow();
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
