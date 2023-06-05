@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -195,6 +196,45 @@ class _SignupPageState extends State<SignupPage> {
             });
       }
     }
+  }
+
+  void signUpAndAuthenticateTraveler() async {
+    User? currentUser;
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim())
+        .then((auth) {
+      saveDataToFireStore(auth.user!);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WelcomePage()),
+      );
+    }).onError((error, stackTrace) {
+      showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+              message: error.toString(),
+              title: 'Error message',
+            );
+          });
+    });
+  }
+
+  Future saveDataToFireStore(User currentUser) async {
+    FirebaseFirestore.instance
+        .collection("travelers")
+        .doc(currentUser.uid)
+        .set({
+      "uid": currentUser.uid,
+      "email": currentUser.email,
+      "userName": _userNameController.text.trim(),
+      "phoneNumber": _phoneNumberController.text.trim(),
+      "age": selectedAgeRange,
+      "imageUrl": travelerImageUrl,
+      "joinedAt": DateTime.now(),
+    });
   }
 
   @override
