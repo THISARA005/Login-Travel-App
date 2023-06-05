@@ -174,6 +174,7 @@ class _SignupPageState extends State<SignupPage> {
               await uploadTask.whenComplete(() {});
           await taskSnapshot.ref.getDownloadURL().then((url) {
             travelerImageUrl = url;
+            signUpAndAuthenticateTraveler();
           });
         } else {
           showDialog(
