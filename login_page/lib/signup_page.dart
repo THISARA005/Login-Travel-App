@@ -27,6 +27,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
 
   // Track the selected country
 
@@ -126,6 +127,30 @@ class _SignupPageState extends State<SignupPage> {
               title: 'Error message',
             );
           });
+    } else {
+      Navigator.pushNamed(context, '/homePage');
+    }
+  }
+
+  Future<void> formValidation1() async {
+    final form = _formKey.currentState;
+    if (form == null) return;
+
+    if (!form.validate()) {
+      // Invalid form
+      return;
+    }
+
+    if (_imageFile == null) {
+      showDialog(
+        context: context,
+        builder: (c) {
+          return ErrorDialog(
+            message: "Please select a profile picture",
+            title: 'Error message',
+          );
+        },
+      );
     } else {
       Navigator.pushNamed(context, '/homePage');
     }
