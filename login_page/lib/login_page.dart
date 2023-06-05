@@ -7,6 +7,10 @@ import 'package:login_page/error_dialog.dart';
 import 'package:login_page/home_screen.dart';
 import 'package:login_page/reusable_widget.dart';
 import 'package:login_page/signup_page.dart';
+import 'package:login_page/welcome_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'loading_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,17 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
         context: context,
         builder: (c) {
-          return AlertDialog(
-            title: Text("Please wait"),
-            content: Text("We are logging you in"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Ok"))
-            ],
-          );
+          return LoadingDialog(message: "Checking credentials");
         });
 
     User? currentUser;
@@ -71,14 +65,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Future readDataAndSetDataLocally(User currentUser) async {
     await FirebaseFirestore.instance
-        .collection("users")
+        .collection("travelers")
         .doc(currentUser.uid)
         .get()
         .then((snapShot) async {
-      // await sharedPreferences!.setString("uid", currentUser.uid);
-      // await sharedPreferences!.setString("uName", _userNameController.text);
-      // await sharedPreferences!.setString("email", _emailController);
-      // await sharedPreferences!.setString("photoURL", currentUser.uid);
+      SharedPreferences? preferences = await SharedPreferences.getInstance();
+      await preferences.setString("uid", currentUser.uid);
+      await preferences.setString("email", _emailController.text.trim());
+      await preferences.setString("uName", snapShot.data()!['userName']);
+      await preferences.setString("photoURL", snapShot.data()!['imgUrl']);
     });
   }
 
@@ -131,22 +126,45 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    SignInSignUpButton(context, true, () {
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _passwordController.text)
-                          .then((value) {
-                        print("succefully login");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
-                      }).catchError((e) {
-                        print(e);
-                      });
-                    }),
+                    // SignInSignUpButton(context, true, () {
+                    //   FirebaseAuth.instance
+                    //       .signInWithEmailAndPassword(
+                    //           email: _emailController.text,
+                    //           password: _passwordController.text)
+                    //       .then((value) {
+                    //     print("succefully login");
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => const WelcomePage()),
+                    //     );
+                    //   }).catchError((e) {
+                    //     print(e);
+                    //   });
+                    // }),
+                    Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          formValidation();
+                          loginNow();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 30),
+                          textStyle: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        child: Text('Sign-Up'),
+                      ),
+                    ),
                     SizedBox(
                       height: 20,
                     ),
