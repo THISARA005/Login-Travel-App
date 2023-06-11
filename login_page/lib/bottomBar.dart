@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class NavBar extends StatefulWidget {
+  const NavBar({super.key});
 
   @override
-  State<ChatScreen> createState() => _MyWidgetState();
+  State<NavBar> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<ChatScreen> {
+class _MyWidgetState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
