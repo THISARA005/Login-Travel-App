@@ -14,6 +14,17 @@ class _MyWidgetState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 187, 235, 205),
+                Color.fromARGB(255, 86, 105, 94),
+              ]),
+        ),
+      ),
       bottomNavigationBar: CurvedNavigationBar(
         items: [
           const Icon(Icons.home),
@@ -22,7 +33,11 @@ class _MyWidgetState extends State<ChatScreen> {
           const Icon(Icons.favorite),
           const Icon(Icons.person),
         ],
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        onTap: (index) {
+          print(index);
+        },
+        color: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Color.fromARGB(255, 86, 105, 94),
       ),
     );
   }
