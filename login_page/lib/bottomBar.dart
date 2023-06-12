@@ -19,8 +19,8 @@ class NavBar extends StatefulWidget {
 class _MyWidgetState extends State<NavBar> {
   final items = [
     const Icon(Icons.home),
-    const Icon(Icons.map),
-    const Icon(Icons.chat),
+    const Icon(Icons.location_on),
+    const Icon(Icons.message),
     const Icon(Icons.favorite),
     const Icon(Icons.person),
   ];
