@@ -26,13 +26,11 @@ class _SignupPageState extends State<SignupPage> {
   final ImagePicker _picker = ImagePicker();
   PickedFile? _imageFile;
   String? selectedAgeRange;
-  GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
 
   String travelerImageUrl = "";
   // Track the selected country
@@ -139,8 +137,6 @@ class _SignupPageState extends State<SignupPage> {
   // }
 
   Future<void> formValidation1() async {
-    final form = _formKey.currentState;
-
     if (_imageFile == null) {
       showDialog(
         context: context,
@@ -214,13 +210,13 @@ class _SignupPageState extends State<SignupPage> {
         MaterialPageRoute(
             builder: (context) => LoginPage()), // Navigate to WelcomePage
       );
-    }).catchError((Error) {
+    }).catchError((error) {
       Navigator.pop(context);
       showDialog(
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: Error.toString(),
+              message: error.toString(),
               title: 'Error message',
             );
           });
@@ -417,22 +413,6 @@ class _SignupPageState extends State<SignupPage> {
                     child: Text('Sign-Up'),
                   ),
                 ),
-                // SignInSignUpButton(context, false, () {
-                //   FirebaseAuth.instance
-                //       .createUserWithEmailAndPassword(
-                //           email: _emailController.text,
-                //           password: _passwordController.text)
-                //       .then((value) {
-                //     print("account created");
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const LoginPage()),
-                //     );
-                //   }).onError((error, stackTrace) {
-                //     print("error ${error.toString()}");
-                //   });
-                // }),
                 SizedBox(
                   height: 25,
                 ),
