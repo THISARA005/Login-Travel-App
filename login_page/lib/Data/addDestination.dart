@@ -2,52 +2,56 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddDestination extends StatefulWidget {
   @override
-  _MyFormPageState createState() => _MyFormPageState();
+  _ImageUploadPageState createState() => _ImageUploadPageState();
 }
 
-class _MyFormPageState extends State<AddDestination> {
+class _ImageUploadPageState extends State<AddDestination> {
   late File _selectedImage;
-  late String _imageUrl;
-  String _textInput1 = '';
-  String _textInput2 = '';
-  String _textInput3 = '';
-  late int _selectedNumber;
+  String _imageUrl = '';
 
-  final List<int> _numbers = [1, 2, 3, 4, 5];
-
-  Future<void> _uploadImage() async {
-    try {
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-      await ref.putFile(_selectedImage);
-      String imageUrl = await ref.getDownloadURL();
+  Future<void> _selectImage() async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
       setState(() {
-        _imageUrl = imageUrl;
+        _selectedImage = File(pickedImage.path);
       });
-    } catch (e) {
-      // Handle image upload error
-      print(e.toString());
     }
   }
 
-  Future<void> _saveDataToFirestore() async {
-    try {
-      await FirebaseFirestore.instance.collection('your_collection').add({
-        'image_url': _imageUrl,
-        'text_input1': _textInput1,
-        'text_input2': _textInput2,
-        'text_input3': _textInput3,
-        'selected_number': _selectedNumber,
-      });
-      // Data saved successfully
-      // Perform any additional actions if needed
-    } catch (e) {
-      // Handle Firestore save error
-      print(e.toString());
+  Future<void> _uploadImage() async {
+    if (_selectedImage != null) {
+      try {
+        String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+        firebase_storage.Reference ref = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('images/$imageName.jpg');
+        await ref.putFile(_selectedImage);
+        String imageUrl = await ref.getDownloadURL();
+        setState(() {
+          _imageUrl = imageUrl;
+        });
+      } catch (e) {
+        print('Error uploading image: $e');
+      }
+    }
+  }
+
+  Future<void> _saveImageUrlToFirestore() async {
+    if (_imageUrl.isNotEmpty) {
+      try {
+        await FirebaseFirestore.instance.collection('your_collection').add({
+          'image_url': _imageUrl,
+        });
+        print('Image URL saved to Firestore');
+      } catch (e) {
+        print('Error saving image URL to Firestore: $e');
+      }
     }
   }
 
@@ -55,124 +59,36 @@ class _MyFormPageState extends State<AddDestination> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Form Page'),
+        title: Text('Image Upload'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildImagePreview(),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Select and set the image file
-                  // You can use a plugin like image_picker to handle image selection
-                  setState(() {
-                    // _selectedImage = selectedImage;
-                    // Replace the above line with your image selection logic
-                  });
-                },
-                child: Text('Select Image'),
-              ),
-              SizedBox(height: 16.0),
-              Text('Text Input 1'),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _textInput1 = value;
-                  });
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('Text Input 2'),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _textInput2 = value;
-                  });
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('Text Input 3'),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _textInput3 = value;
-                  });
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('Select a number'),
-              DropdownButton<int>(
-                value: _selectedNumber,
-                items: _numbers.map((int number) {
-                  return DropdownMenuItem<int>(
-                    value: number,
-                    child: Text(number.toString()),
-                  );
-                }).toList(),
-                onChanged: (int? newValue) {
-                  setState(() {
-                    _selectedNumber = newValue!;
-                  });
-                },
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_selectedImage != null &&
-                      _textInput1.isNotEmpty &&
-                      _textInput2.isNotEmpty &&
-                      _textInput3.isNotEmpty &&
-                      _selectedNumber != null) {
-                    _uploadImage().then((_) {
-                      _saveDataToFirestore();
-                    });
-                  } else {
-                    // Show validation error message
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Error'),
-                        content:
-                            Text('Please fill all fields and select an image.'),
-                        actions: [
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
-                child: Text('Save'),
-              ),
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _selectedImage != null
+                ? Image.file(
+                    _selectedImage,
+                    width: 200,
+                    height: 200,
+                  )
+                : Text('No Image Selected'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _selectImage,
+              child: Text('Select Image'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _uploadImage().then((_) {
+                  _saveImageUrlToFirestore();
+                });
+              },
+              child: Text('Upload and Save'),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  Widget _buildImagePreview() {
-    if (_selectedImage != null) {
-      return Container(
-        width: 200.0,
-        height: 200.0,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(_selectedImage),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    } else {
-      return Text('No Image Selected');
-    }
   }
 }
