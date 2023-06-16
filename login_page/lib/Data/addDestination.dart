@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
 
 class AddDestination extends StatefulWidget {
   @override
@@ -21,8 +17,6 @@ class _ImageUploadPageState extends State<AddDestination> {
   TextEditingController _cityController = TextEditingController();
   TextEditingController _ratingsController = TextEditingController();
   TextEditingController _reviewsController = TextEditingController();
-  bool _isLoading = false;
-  LatLng? _selectedLocation;
 
   Future<void> _selectImage() async {
     final pickedImage =
@@ -37,10 +31,6 @@ class _ImageUploadPageState extends State<AddDestination> {
   Future<void> _uploadImage() async {
     if (_selectedImage != null) {
       try {
-        setState(() {
-          _isLoading = true;
-        });
-
         String imageName = DateTime.now().millisecondsSinceEpoch.toString();
         firebase_storage.Reference ref = firebase_storage
             .FirebaseStorage.instance
@@ -51,15 +41,8 @@ class _ImageUploadPageState extends State<AddDestination> {
         setState(() {
           _imageUrl = imageUrl;
         });
-
-        setState(() {
-          _isLoading = false;
-        });
       } catch (e) {
         print('Error uploading image: $e');
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
   }
@@ -67,43 +50,29 @@ class _ImageUploadPageState extends State<AddDestination> {
   Future<void> _saveDataToFirestore() async {
     if (_imageUrl.isNotEmpty) {
       try {
-        setState(() {
-          _isLoading = true;
-        });
-
         await FirebaseFirestore.instance.collection('Destination').add({
           'destName': _destNameController.text,
           'location': _locationController.text,
           'city': _cityController.text,
-          'ratings': double.parse(_ratingsController.text),
+          'ratings': int.parse(_ratingsController.text),
           'reviews': _reviewsController.text,
           'image_url': _imageUrl,
-          'latitude': _selectedLocation?.latitude,
-          'longitude': _selectedLocation?.longitude,
         });
-
-        await Future.delayed(Duration(seconds: 3));
-
-        Fluttertoast.showToast(
-          msg: 'Data saved to Firestore',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-
-        setState(() {
-          _isLoading = false;
-        });
+        print('Data saved to Firestore');
+        _showNotification('Data saved to Firestore');
       } catch (e) {
         print('Error saving data to Firestore: $e');
-        setState(() {
-          _isLoading = false;
-        });
+        _showNotification('Failed to save data to Firestore');
       }
     }
+  }
+
+  void _showNotification(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   @override
@@ -147,49 +116,25 @@ class _ImageUploadPageState extends State<AddDestination> {
                   labelText: 'Destination Name',
                 ),
               ),
-              SizedBox(height: 20),
-              Container(
-                height: 200,
-                child: GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                        37.7749, -122.4194), // Default location (San Francisco)
-                    zoom: 12,
-                  ),
-                  onTap: (LatLng latLng) async {
-                    setState(() {
-                      _selectedLocation = latLng;
-                    });
-
-                    List<Placemark> placemarks = await placemarkFromCoordinates(
-                      latLng.latitude,
-                      latLng.longitude,
-                    );
-
-                    if (placemarks.isNotEmpty) {
-                      Placemark placemark = placemarks[0];
-                      String address = placemark.name ?? '';
-                      _locationController.text = address;
-                    }
-                  },
+              TextField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Location',
                 ),
               ),
-              SizedBox(height: 20),
               TextField(
                 controller: _cityController,
                 decoration: InputDecoration(
                   labelText: 'City',
                 ),
               ),
-              SizedBox(height: 20),
               TextField(
                 controller: _ratingsController,
                 decoration: InputDecoration(
                   labelText: 'Ratings',
                 ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 20),
               TextField(
                 controller: _reviewsController,
                 decoration: InputDecoration(
@@ -206,13 +151,6 @@ class _ImageUploadPageState extends State<AddDestination> {
                 },
                 child: Text('Upload and Save'),
               ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? SpinKitCircle(
-                      color: Theme.of(context).primaryColor,
-                      size: 50.0,
-                    )
-                  : Container(),
             ],
           ),
         ),
