@@ -10,8 +10,13 @@ class AddDestination extends StatefulWidget {
 }
 
 class _ImageUploadPageState extends State<AddDestination> {
-  late File _selectedImage;
+  File? _selectedImage;
   String _imageUrl = '';
+  TextEditingController _destNameController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
+  TextEditingController _ratingsController = TextEditingController();
+  TextEditingController _reviewsController = TextEditingController();
 
   Future<void> _selectImage() async {
     final pickedImage =
@@ -31,7 +36,7 @@ class _ImageUploadPageState extends State<AddDestination> {
             .FirebaseStorage.instance
             .ref()
             .child('images/$imageName.jpg');
-        await ref.putFile(_selectedImage);
+        await ref.putFile(_selectedImage!);
         String imageUrl = await ref.getDownloadURL();
         setState(() {
           _imageUrl = imageUrl;
@@ -42,51 +47,102 @@ class _ImageUploadPageState extends State<AddDestination> {
     }
   }
 
-  Future<void> _saveImageUrlToFirestore() async {
+  Future<void> _saveDataToFirestore() async {
     if (_imageUrl.isNotEmpty) {
       try {
-        await FirebaseFirestore.instance.collection('your_collection').add({
+        await FirebaseFirestore.instance.collection('Destination').add({
+          'destName': _destNameController.text,
+          'location': _locationController.text,
+          'city': _cityController.text,
+          'ratings': int.parse(_ratingsController.text),
+          'reviews': _reviewsController.text,
           'image_url': _imageUrl,
         });
-        print('Image URL saved to Firestore');
+        print('Data saved to Firestore');
       } catch (e) {
-        print('Error saving image URL to Firestore: $e');
+        print('Error saving data to Firestore: $e');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _destNameController.dispose();
+    _locationController.dispose();
+    _cityController.dispose();
+    _ratingsController.dispose();
+    _reviewsController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Image Upload'),
+        title: Text('Add Destination'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _selectedImage != null
-                ? Image.file(
-                    _selectedImage,
-                    width: 200,
-                    height: 200,
-                  )
-                : Text('No Image Selected'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectImage,
-              child: Text('Select Image'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _uploadImage().then((_) {
-                  _saveImageUrlToFirestore();
-                });
-              },
-              child: Text('Upload and Save'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _selectedImage != null
+                  ? Image.file(
+                      _selectedImage!,
+                      width: 200,
+                      height: 200,
+                    )
+                  : Text('No Image Selected'),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _selectImage,
+                child: Text('Select Image'),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _destNameController,
+                decoration: InputDecoration(
+                  labelText: 'Destination Name',
+                ),
+              ),
+              TextField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Location',
+                ),
+              ),
+              TextField(
+                controller: _cityController,
+                decoration: InputDecoration(
+                  labelText: 'City',
+                ),
+              ),
+              TextField(
+                controller: _ratingsController,
+                decoration: InputDecoration(
+                  labelText: 'Ratings',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: _reviewsController,
+                decoration: InputDecoration(
+                  labelText: 'Reviews',
+                ),
+                maxLines: 3,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  _uploadImage().then((_) {
+                    _saveDataToFirestore();
+                  });
+                },
+                child: Text('Upload and Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );
