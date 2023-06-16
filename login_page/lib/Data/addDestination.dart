@@ -15,8 +15,9 @@ class _ImageUploadPageState extends State<AddDestination> {
   TextEditingController _destNameController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   TextEditingController _cityController = TextEditingController();
-  TextEditingController _ratingsController = TextEditingController();
+  String? _selectedRating;
   TextEditingController _reviewsController = TextEditingController();
+  List<String> _ratingList = ['1', '2', '3', '4', '5'];
 
   Future<void> _selectImage() async {
     final pickedImage =
@@ -49,20 +50,50 @@ class _ImageUploadPageState extends State<AddDestination> {
 
   Future<void> _saveDataToFirestore() async {
     if (_imageUrl.isNotEmpty) {
-      try {
-        await FirebaseFirestore.instance.collection('Destination').add({
-          'destName': _destNameController.text,
-          'location': _locationController.text,
-          'city': _cityController.text,
-          'ratings': int.parse(_ratingsController.text),
-          'reviews': _reviewsController.text,
-          'image_url': _imageUrl,
-        });
-        print('Data saved to Firestore');
-        _showNotification('Data saved to Firestore');
-      } catch (e) {
-        print('Error saving data to Firestore: $e');
-        _showNotification('Failed to save data to Firestore');
+      String destName = _destNameController.text.trim();
+      String location = _locationController.text.trim();
+      String city = _cityController.text.trim();
+      String reviews = _reviewsController.text.trim();
+
+      if (destName.isNotEmpty &&
+          city.isNotEmpty &&
+          _selectedRating != null &&
+          reviews.isNotEmpty) {
+        try {
+          await FirebaseFirestore.instance.collection('Destination').add({
+            'destName': destName,
+            'location': location,
+            'city': city,
+            'ratings': int.parse(_selectedRating!),
+            'reviews': reviews,
+            'image_url': _imageUrl,
+          });
+          print('Data saved to Firestore');
+          _showNotification('Data saved to Firestore');
+        } catch (e) {
+          print('Error saving data to Firestore: $e');
+          _showNotification('Failed to save data to Firestore');
+        }
+      } else {
+        String errorMessage = '';
+
+        if (destName.isEmpty) {
+          errorMessage += 'Destination Name is required. ';
+        }
+
+        if (city.isEmpty) {
+          errorMessage += 'City is required. ';
+        }
+
+        if (_selectedRating == null) {
+          errorMessage += 'Please select a Rating. ';
+        }
+
+        if (reviews.isEmpty) {
+          errorMessage += 'Reviews is required. ';
+        }
+
+        _showNotification(errorMessage);
       }
     }
   }
@@ -80,7 +111,6 @@ class _ImageUploadPageState extends State<AddDestination> {
     _destNameController.dispose();
     _locationController.dispose();
     _cityController.dispose();
-    _ratingsController.dispose();
     _reviewsController.dispose();
     super.dispose();
   }
@@ -128,12 +158,23 @@ class _ImageUploadPageState extends State<AddDestination> {
                   labelText: 'City',
                 ),
               ),
-              TextField(
-                controller: _ratingsController,
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: _selectedRating,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedRating = newValue;
+                  });
+                },
                 decoration: InputDecoration(
                   labelText: 'Ratings',
                 ),
-                keyboardType: TextInputType.number,
+                items: _ratingList.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
               TextField(
                 controller: _reviewsController,
