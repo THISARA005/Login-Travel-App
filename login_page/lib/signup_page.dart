@@ -210,13 +210,13 @@ class _SignupPageState extends State<SignupPage> {
         MaterialPageRoute(
             builder: (context) => LoginPage()), // Navigate to WelcomePage
       );
-    }).catchError((error) {
+    }).catchError((Error) {
       Navigator.pop(context);
       showDialog(
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: error.toString(),
+              message: Error.toString(),
               title: 'Error message',
             );
           });
