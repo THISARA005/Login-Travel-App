@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddDestination extends StatefulWidget {
   @override
@@ -58,7 +59,13 @@ class _ImageUploadPageState extends State<AddDestination> {
           'reviews': _reviewsController.text,
           'image_url': _imageUrl,
         });
-        print('Data saved to Firestore');
+        Fluttertoast.showToast(
+          msg: 'Data saved to Firestore',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
       } catch (e) {
         print('Error saving data to Firestore: $e');
       }
