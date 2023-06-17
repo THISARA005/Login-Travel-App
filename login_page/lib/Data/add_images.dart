@@ -1,8 +1,12 @@
 import 'dart:io' if (dart.library.html) 'dart:html';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AddImage extends StatefulWidget {
   const AddImage({Key? key}) : super(key: key);
@@ -12,14 +16,25 @@ class AddImage extends StatefulWidget {
 }
 
 class _AddImageState extends State<AddImage> {
+  bool uploading = false;
+  double val = 0;
+  CollectionReference imgRef = FirebaseFirestore.instance.collection('images');
   List<XFile> _image = []; // List to store selected images
+  FirebaseStorage ref = FirebaseStorage.instance;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Image'),
-        actions: [ElevatedButton(child: Text("Save"), onPressed: () {})],
+        actions: [
+          ElevatedButton(
+              child: Text("Save"),
+              onPressed: () {
+                uploadImageToFirebase(context)
+                    .whenComplete(() => Navigator.pop(context));
+              })
+        ],
       ),
       body: Column(
         children: [
@@ -95,5 +110,33 @@ class _AddImageState extends State<AddImage> {
     } else {
       print(response.file);
     }
+  }
+
+  Future uploadImageToFirebase(BuildContext context) async {
+    if (_image.isNotEmpty) {
+      try {
+        for (var img in _image) {
+          String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+          firebase_storage.Reference ref = firebase_storage
+              .FirebaseStorage.instance
+              .ref()
+              .child('images/$imageName.jpg');
+          await ref.putFile(File(img.path));
+          String imageUrl = await ref.getDownloadURL();
+          print(imageUrl);
+        }
+      } catch (e) {
+        print('Error uploading image: $e');
+      }
+    }
+  }
+
+  void initState() {
+    super.initState();
+    // Firebase.initializeApp().whenComplete(() {
+    //   print("completed");
+    //   setState(() {});
+    // });
+    imgRef = FirebaseFirestore.instance.collection('images');
   }
 }
