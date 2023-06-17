@@ -39,38 +39,65 @@ class _AddImageState extends State<AddImage> {
       body: Column(
         children: [
           Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent:
-                    200, // Set the maximum width for each grid item
-                mainAxisSpacing:
-                    10, // Set the spacing between the items vertically
-                crossAxisSpacing:
-                    10, // Set the spacing between the items horizontally
-              ),
-              itemCount:
-                  _image.length + 1, // Set the total number of grid items
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Center(
-                    child: IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () {
-                        chooseImage();
-                      },
-                    ),
-                  );
-                } else {
-                  return Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: getImageProvider(_image[index - 1]),
-                      ),
-                    ),
-                  );
-                }
-              },
+            child: Stack(
+              children: [
+                GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent:
+                        200, // Set the maximum width for each grid item
+                    mainAxisSpacing:
+                        10, // Set the spacing between the items vertically
+                    crossAxisSpacing:
+                        10, // Set the spacing between the items horizontally
+                  ),
+                  itemCount:
+                      _image.length + 1, // Set the total number of grid items
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Center(
+                        child: IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            chooseImage();
+                          },
+                        ),
+                      );
+                    } else {
+                      return Container(
+                        margin: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: getImageProvider(_image[index - 1]),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                uploading
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              child: Text(
+                                'Uploading...',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            CircularProgressIndicator(
+                              value: val,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.green),
+                            )
+                          ],
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ),
         ],
@@ -113,9 +140,14 @@ class _AddImageState extends State<AddImage> {
   }
 
   Future uploadImageToFirebase(BuildContext context) async {
+    int i = 1;
     if (_image.isNotEmpty) {
       try {
         for (var img in _image) {
+          setState(() {
+            uploading = true;
+            val = i / _image.length;
+          });
           String imageName = DateTime.now().millisecondsSinceEpoch.toString();
           firebase_storage.Reference ref = firebase_storage
               .FirebaseStorage.instance
@@ -124,6 +156,7 @@ class _AddImageState extends State<AddImage> {
           await ref.putFile(File(img.path));
           String imageUrl = await ref.getDownloadURL();
           print(imageUrl);
+          i = i + 1;
         }
       } catch (e) {
         print('Error uploading image: $e');
