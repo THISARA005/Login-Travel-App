@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_page/Data/add_images.dart';
 
 class AddDestination extends StatefulWidget {
   @override
@@ -184,6 +185,12 @@ class _ImageUploadPageState extends State<AddDestination> {
                 maxLines: 3,
               ),
               SizedBox(height: 20),
+              FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddImage()));
+                  },
+                  child: Text("Pick images for the gallery")),
               ElevatedButton(
                 onPressed: () {
                   _uploadImage().then((_) {
