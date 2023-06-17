@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multiple_image_picker/multiple_image_picker.dart';
+import 'package:multiple_images_picker/multiple_images_picker.dart';
 
 class AddDestination extends StatefulWidget {
   @override
@@ -10,8 +12,8 @@ class AddDestination extends StatefulWidget {
 }
 
 class _ImageUploadPageState extends State<AddDestination> {
-  File? _selectedImage;
-  String _imageUrl = '';
+  List<File> _selectedImages = [];
+  List<String> _imageUrls = [];
   TextEditingController _destNameController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   TextEditingController _cityController = TextEditingController();
@@ -19,82 +21,90 @@ class _ImageUploadPageState extends State<AddDestination> {
   TextEditingController _reviewsController = TextEditingController();
   List<String> _ratingList = ['1', '2', '3', '4', '5'];
 
-  Future<void> _selectImage() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
+  Future<void> _selectImages() async {
+    List<Asset> resultList = [];
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 5,
+        enableCamera: true,
+      );
+    } catch (e) {
+      print('Error selecting images: $e');
+    }
+
+    if (resultList.isNotEmpty) {
+      List<File> images = [];
+      List<String> urls = [];
+
+      for (var asset in resultList) {
+        try {
+          File file = await assetToFile(asset);
+          images.add(file);
+          urls.add(await uploadImageToFirebase(file));
+        } catch (e) {
+          print('Error uploading image: $e');
+        }
+      }
+
       setState(() {
-        _selectedImage = File(pickedImage.path);
+        _selectedImages = images;
+        _imageUrls = urls;
       });
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_selectedImage != null) {
-      try {
-        String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-        firebase_storage.Reference ref = firebase_storage
-            .FirebaseStorage.instance
-            .ref()
-            .child('images/$imageName.jpg');
-        await ref.putFile(_selectedImage!);
-        String imageUrl = await ref.getDownloadURL();
-        setState(() {
-          _imageUrl = imageUrl;
-        });
-      } catch (e) {
-        print('Error uploading image: $e');
-      }
+  Future<File> assetToFile(Asset asset) async {
+    final byteData = await asset.getByteData();
+    final file = File('${(await getTemporaryDirectory()).path}/${asset.name}');
+    await file.writeAsBytes(byteData.buffer.asUint8List(
+      byteData.offsetInBytes,
+      byteData.lengthInBytes,
+    ));
+    return file;
+  }
+
+  Future<String> uploadImageToFirebase(File image) async {
+    try {
+      String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('images/$imageName.jpg');
+      await ref.putFile(image);
+      String imageUrl = await ref.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return '';
     }
   }
 
   Future<void> _saveDataToFirestore() async {
-    if (_imageUrl.isNotEmpty) {
-      String destName = _destNameController.text.trim();
-      String location = _locationController.text.trim();
-      String city = _cityController.text.trim();
-      String reviews = _reviewsController.text.trim();
+    String destName = _destNameController.text.trim();
+    String location = _locationController.text.trim();
+    String city = _cityController.text.trim();
+    String reviews = _reviewsController.text.trim();
 
-      if (destName.isNotEmpty &&
-          city.isNotEmpty &&
-          _selectedRating != null &&
-          reviews.isNotEmpty) {
-        try {
-          await FirebaseFirestore.instance.collection('Destination').add({
-            'destName': destName,
-            'location': location,
-            'city': city,
-            'ratings': int.parse(_selectedRating!),
-            'reviews': reviews,
-            'image_url': _imageUrl,
-          });
-          print('Data saved to Firestore');
-          _showNotification('Data saved to Firestore');
-        } catch (e) {
-          print('Error saving data to Firestore: $e');
-          _showNotification('Failed to save data to Firestore');
-        }
-      } else {
-        String errorMessage = '';
-
-        if (destName.isEmpty) {
-          errorMessage += 'Destination Name is required. ';
-        }
-
-        if (city.isEmpty) {
-          errorMessage += 'City is required. ';
-        }
-
-        if (_selectedRating == null) {
-          errorMessage += 'Please select a Rating. ';
-        }
-
-        if (reviews.isEmpty) {
-          errorMessage += 'Reviews is required. ';
-        }
-
-        _showNotification(errorMessage);
+    if (destName.isNotEmpty &&
+        city.isNotEmpty &&
+        _selectedRating != null &&
+        reviews.isNotEmpty) {
+      try {
+        await FirebaseFirestore.instance.collection('Destination').add({
+          'destName': destName,
+          'location': location,
+          'city': city,
+          'ratings': int.parse(_selectedRating!),
+          'reviews': reviews,
+          'imageUrls': _imageUrls,
+        });
+        print('Data saved to Firestore');
+        _showNotification('Data saved to Firestore');
+      } catch (e) {
+        print('Error saving data to Firestore: $e');
+        _showNotification('Failed to save data to Firestore');
       }
+    } else {
+      _showNotification('Please fill all the required fields');
     }
   }
 
@@ -127,17 +137,22 @@ class _ImageUploadPageState extends State<AddDestination> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      width: 200,
-                      height: 200,
+              _selectedImages.isNotEmpty
+                  ? Column(
+                      children: [
+                        for (var image in _selectedImages)
+                          Image.file(
+                            image,
+                            width: 200,
+                            height: 200,
+                          ),
+                      ],
                     )
-                  : Text('No Image Selected'),
+                  : Text('No Images Selected'),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _selectImage,
-                child: Text('Select Image'),
+                onPressed: _selectImages,
+                child: Text('Select Images'),
               ),
               SizedBox(height: 20),
               TextField(
@@ -186,9 +201,7 @@ class _ImageUploadPageState extends State<AddDestination> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _uploadImage().then((_) {
-                    _saveDataToFirestore();
-                  });
+                  _saveDataToFirestore();
                 },
                 child: Text('Upload and Save'),
               ),
