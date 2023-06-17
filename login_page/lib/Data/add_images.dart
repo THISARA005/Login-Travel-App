@@ -18,7 +18,8 @@ class AddImage extends StatefulWidget {
 class _AddImageState extends State<AddImage> {
   bool uploading = false;
   double val = 0;
-  CollectionReference imgRef = FirebaseFirestore.instance.collection('images');
+  CollectionReference imgRef =
+      FirebaseFirestore.instance.collection('Destinations');
   List<XFile> _image = []; // List to store selected images
   FirebaseStorage ref = FirebaseStorage.instance;
 
@@ -29,11 +30,13 @@ class _AddImageState extends State<AddImage> {
         title: const Text('Add Image'),
         actions: [
           ElevatedButton(
-              child: Text("Save"),
-              onPressed: () {
-                uploadImageToFirebase(context)
-                    .whenComplete(() => Navigator.pop(context));
-              })
+            child: Text("Save"),
+            onPressed: () {
+              // uploadImageToFirebase(context)
+              //     .whenComplete(() => Navigator.pop(context));
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
       body: Column(
@@ -58,7 +61,7 @@ class _AddImageState extends State<AddImage> {
                         child: IconButton(
                           icon: Icon(Icons.add),
                           onPressed: () {
-                            chooseImage();
+                            !uploading ? chooseImage() : null;
                           },
                         ),
                       );
@@ -92,7 +95,7 @@ class _AddImageState extends State<AddImage> {
                               value: val,
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.green),
-                            )
+                            ),
                           ],
                         ),
                       )
@@ -114,11 +117,10 @@ class _AddImageState extends State<AddImage> {
   }
 
   chooseImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    final pickedFiles = await ImagePicker().pickMultiImage();
+    if (pickedFiles != null) {
       setState(() {
-        _image.add(pickedFile);
+        _image.addAll(pickedFiles.map((pickedFile) => XFile(pickedFile.path)));
       });
     } else {
       await retrieveLostData();
@@ -132,7 +134,7 @@ class _AddImageState extends State<AddImage> {
     }
     if (response.file != null) {
       setState(() {
-        _image.add(XFile(response.file!.path!));
+        _image.add(XFile(response.file!.path));
       });
     } else {
       print(response.file);
@@ -152,10 +154,11 @@ class _AddImageState extends State<AddImage> {
           firebase_storage.Reference ref = firebase_storage
               .FirebaseStorage.instance
               .ref()
-              .child('images/$imageName.jpg');
+              .child('Destinations/$imageName.jpg');
           await ref.putFile(File(img.path));
           String imageUrl = await ref.getDownloadURL();
           print(imageUrl);
+          await imgRef.add({'image_url': imageUrl});
           i = i + 1;
         }
       } catch (e) {
@@ -164,12 +167,13 @@ class _AddImageState extends State<AddImage> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
-    // Firebase.initializeApp().whenComplete(() {
-    //   print("completed");
-    //   setState(() {});
-    // });
-    imgRef = FirebaseFirestore.instance.collection('images');
+    Firebase.initializeApp().whenComplete(() {
+      print("completed");
+      setState(() {});
+    });
+    imgRef = FirebaseFirestore.instance.collection('Destinations');
   }
 }
